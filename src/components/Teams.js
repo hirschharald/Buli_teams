@@ -37,10 +37,6 @@ const Teams = () => {
     }
   }, []);
 
-  // const filtered = strings.filter(str => {
-  //   return str.match(/^at/g);
-  // });
-
   const doAddTeam = useCallback(teams => {
     //
     var newTeamsArr = teamdata.teams;
@@ -49,7 +45,13 @@ const Teams = () => {
     dispatch({ type: "SET", payload: newTeamsArr });
   });
 
-  const doDeleteTeam = () => {};
+  const doDeleteTeam = useCallback(id => {
+    const filtered = teamdata.teams.filter(team => {
+      return team.TeamId !== id ? true : false;
+    });
+    console.log("###### delete Team ########", id, filtered);
+    dispatch({ type: "SET", payload: filtered });
+  });
 
   return (
     <>
@@ -60,19 +62,14 @@ const Teams = () => {
           <tbody>
             {teamdata.teams.map((t, k) => (
               <tr key={k}>
-                <Team team={t} />
+                <Team team={t} deleteTeam={doDeleteTeam} />
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      <Search
-        filterTeams={doFilterTeams}
-        addTeam={doAddTeam}
-        deleteTeam={doDeleteTeam}
-        data={data}
-      />
+      <Search filterTeams={doFilterTeams} addTeam={doAddTeam} data={data} />
     </>
   );
 };
